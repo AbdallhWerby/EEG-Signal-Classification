@@ -1,7 +1,6 @@
 # 🧠 Reading Your Mind: EEG Signal Classification
 
 ![Project Banner](images/banner_concept.png)
-*(Optional: Place a cool brain-computer interface image here or a screenshot of your report cover)*
 
 **Author:** Abdallah Khairy Werby (ID: 80708)  
 **Supervisor:** Dr. Eslam Abd El-Azeem  
