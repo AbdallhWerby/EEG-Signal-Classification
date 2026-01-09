@@ -1,118 +1,77 @@
 # 🧠 Reading Your Mind: EEG Signal Classification
 
-![Project Banner](images/banner_concept.png)
-
 **Author:** Abdallah Khairy Werby (ID: 80708)  
 **Supervisor:** Dr. Eslam Abd El-Azeem  
-**Status:** Completed (BME 511 Final Project)
+**Context:** BME 511 Final Project (Biomedical Engineering)
 
 ---
 
-## 📖 The Story: Why This Matters
-Imagine being able to move a robotic arm or type on a computer just by *thinking* about it. For people with severe motor disabilities (like ALS or spinal cord injuries), this isn't science fiction—it's a necessity.
+## 📖 The Story: Turning Noise into Commands
+The human brain generates constant electrical activity, appearing as "noise" to the naked eye. This project asks: **Can a computer listen to this noise and predict what a human wants to do?**
 
-This project, **"Reading Your Mind,"** explores the foundation of Brain-Computer Interfaces (BCIs). By analyzing raw EEG (Electroencephalography) signals—the electrical noise your brain makes—we can predict intended body functions before they physically happen.
-
-**The Practical Goal:**
-Translate a biological "thought" (electrical wave) into a digital "command" (0 or 1) that a machine can understand.
+This repository contains the MATLAB implementation of a **Brain-Computer Interface (BCI)** pipeline. We analyze EEG signals to classify intended states, creating a foundation for technology that assists individuals with motor disabilities (e.g., controlling a robotic arm via thought).
 
 ---
 
-## ⚙️ Methodology: From Brain to Byte
+## ⚙️ Methodology
 
-The project processes raw EEG data collected from 4 different users (14 channels per user) through a rigorous machine learning pipeline.
+The project processes raw EEG data collected from 4 users (14 channels each) through the following pipeline:
 
-![Methodology Pipeline](images/pipeline.png)
-*Figure: Visual representation of the data processing steps.*
-
-### 1. Data Preprocessing
-* **Loading:** Raw `.mat` files containing 14-channel EEG recordings.
-* **Cleaning:** Removal of invalid rows and artifacts.
-* **Epoching:** Segmenting the continuous signal into 1-second "epochs" to isolate specific brain events.
-* **Feature Extraction:** Extracting power bands:
+1.  **Input:** Raw `.mat` EEG data (14 channels).
+2.  **Preprocessing:**
+    * **Cleaning:** Removal of artifacts and invalid rows.
+    * **Epoching:** Segmenting continuous signals into 1-second events.
+3.  **Feature Extraction:** Separating the signal into brain-wave frequency bands:
     * **Delta (< 4Hz):** Deep sleep/unconscious.
     * **Theta (4-8Hz):** Drowsiness/meditation.
     * **Alpha (8-13Hz):** Relaxed alertness.
     * **Beta (> 13Hz):** Active thinking/focus.
-
-### 2. Signal Processing
-We applied **scaling and normalization** to ensure that high-amplitude artifacts do not skew the machine learning models.
-
-![Scaled vs Unscaled Data](images/scaled_data.png)
-*Figure: Comparison of EEG signals before and after normalization.*
-
-### 3. Machine Learning Models
-We implemented and compared six different supervised learning algorithms to classify the signals:
-* **K-Nearest Neighbors (KNN)**
-* **Support Vector Machines (SVM)**
-* **Decision Trees**
-* **Logistic Regression**
-* **Naïve Bayes**
-* **Linear Discriminant Analysis (LDA)**
+4.  **Classification:** Using Supervised Machine Learning to predict the state.
 
 ---
 
-## 📊 Results
+## 📊 Results & Performance
 
-We tested the models on dataset split into Training (50%) and Testing (50%). The **Decision Tree** and **KNN** models proved to be the most effective for this type of biological data.
+We tested six different models. The data suggests that **Decision Trees** and **KNN** are best suited for this specific type of non-linear biological data.
 
-| Model | Accuracy | Sensitivity | Specificity |
-|-------|----------|-------------|-------------|
-| **Decision Tree** | **~70.8%** | High | Moderate |
-| **KNN** | **~70.0%** | Moderate | High |
-| Logistic Regression | ~60.5% | Low | Moderate |
+| Model | Accuracy | Sensitivity | Specificity | Performance Note |
+| :--- | :--- | :--- | :--- | :--- |
+| **Decision Tree** | **~70.8%** | **High** | **Moderate** | Best overall performance. |
+| **KNN (K-Nearest)** | **~70.0%** | **Moderate** | **High** | Very consistent results. |
+| Logistic Regression | ~60.5% | Low | Moderate | struggled with non-linear data. |
+| Naïve Bayes | ~58.0% | Low | Low | Assumed independence too strongly. |
 
-![Performance Metrics Table](images/results_table.png)
-*Figure: Detailed performance metrics output from MATLAB.*
-
-> **Discussion:** Lower sampling rates (20Hz) reduced the fluctuation in accuracy compared to 160Hz, suggesting that for this specific task, reducing data complexity helped the models generalize better, despite the loss of some information.
+### Key Finding on Sampling Rates
+We compared high sampling rates (160Hz) vs. down-sampled rates (20Hz).
+* **160Hz:** Higher accuracy potential (up to 83%) but highly unstable (fluctuated down to 16%).
+* **20Hz:** More stable, consistent accuracy (50-70%).
+* **Conclusion:** Lowering the sampling rate acted as a noise filter, helping the models generalize better despite the loss of some information.
 
 ---
 
-## 💻 How to Run This Project
+## 💻 How to Run
 
 ### Prerequisites
-* MATLAB (R2020b or later recommended)
-* Statistics and Machine Learning Toolbox
+* MATLAB (R2020b or later recommended).
+* Statistics and Machine Learning Toolbox.
 
-### Installation
-1.  Clone the repository:
-    ```bash
-    git clone [https://github.com/YourUsername/EEG-Signal-Classification.git](https://github.com/YourUsername/EEG-Signal-Classification.git)
-    ```
-2.  Ensure you have the data file `Users_Data.mat` in the main folder.
-
-### Running the Classifier
-1.  Open MATLAB.
-2.  Navigate to the project folder.
-3.  Open the script for a specific user, for example, `Classification_User_a.m`.
-4.  **Important:** Ensure the data loading line is set to relative path:
+### Steps
+1.  **Download** the repository to your local machine.
+2.  **Locate** the `Users_Data.mat` file in the main folder.
+3.  **Open** the script for a specific user (e.g., `Classification_User_a.m`).
+4.  **Important:** Ensure the code looks for the data in the current folder, not a specific C: drive path:
     ```matlab
-    % Change this line if it has a hardcoded C:\ path
-    load('Users_Data.mat'); 
+    load('Users_Data.mat'); % Correct
+    % load('C:\subs\Users_Data.mat'); % Incorrect (remove this if seen)
     ```
-5.  Click **Run**. The script will output the accuracy tables and generate performance plots.
+5.  **Run** the script. The Command Window will output the accuracy matrices for all tested models.
 
 ---
 
-## 📸 Project Screenshots
-
-### Classification Output
-![Command Window Output](images/cmd_output.png)
-*The final classification results appearing in the MATLAB Command Window.*
-
-### Confusion Matrices & Plots
-![KNN Model Plot](images/knn_plot.png)
-*Visualization of the K-Nearest Neighbors classification boundary.*
+## 🔗 Future Scope
+To push accuracy beyond 70% and make this viable for real-world medical devices, future work will focus on:
+1.  **Deep Learning:** Replacing manual feature extraction with Convolutional Neural Networks (CNNs).
+2.  **Real-Time Processing:** Interfacing with live EEG headsets (e.g., Emotiv/OpenBCI) rather than pre-recorded datasets.
 
 ---
-
-## 🔗 Future Work
-To improve accuracy beyond 70%, future iterations will explore:
-1.  **Deep Learning:** Implementing CNNs (Convolutional Neural Networks) which are better suited for raw time-series data.
-2.  **Advanced Feature Engineering:** Using Wavelet Transforms instead of simple frequency bands.
-3.  **Real-time Processing:** connecting live EEG headsets (like Emotiv or OpenBCI) for real-time control.
-
----
-
-**© 2025 Abdallah Khairy Werby**
+*© 2025 Abdallah Khairy Werby
